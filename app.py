@@ -5,6 +5,17 @@ import joblib
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
+import base64
+
+def _gambar(nama):
+    try:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", nama), "rb") as f:
+            return "data:image/png;base64," + base64.b64encode(f.read()).decode()
+    except OSError:
+        return ""
+
+IMG_SCATTER = _gambar("scatter.png")
+IMG_PRED = _gambar("pred_vs_actual.png")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 model = joblib.load(os.path.join(BASE_DIR, "model", "model.pkl"))
@@ -43,6 +54,8 @@ def index():
         peringatan=peringatan,
         tinggi=tinggi,
         info=info,
+        img_scatter=IMG_SCATTER,
+        img_pred=IMG_PRED,
     )
 
 
